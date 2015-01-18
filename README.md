@@ -5,4 +5,4 @@ Clojure wrapper for Coursera Private API
 
 ~~~clj
 (enroll-all-active-courses) ;enrolls all active courses
-~~
+~~~
