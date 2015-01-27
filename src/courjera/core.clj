@@ -121,12 +121,6 @@
 (generate-coursera-endpoint-fns)
 ;(macroexpand '(generate-coursera-endpoint-fns))
 
-(defn enrolled-sessions
-  "Get a list of enrolled sessions"
-  []
-  (let [enrollments (:enrollments (coursera-enrollments))]
-    (map enrollment->session enrollments)))
-
 (defn enrollment->session
   "Transform a enrollment into a session, does not hit API"
   ;; {
@@ -145,6 +139,12 @@
   ;; }
   [enrollment]
   (hash-map :id (:sessionId enrollment)))
+
+(defn enrolled-sessions
+  "Get a list of enrolled sessions"
+  []
+  (let [enrollments (:enrollments (coursera-enrollments))]
+    (map enrollment->session enrollments)))
 
 (defn session->sections
   "Transform a session into sections, hits API"
@@ -196,11 +196,10 @@
   ; :post [(m/valid-video? %)]}
   (let [is-lecture? (= "lecture" (get item :itemType))
         video-nested-keywords [:metadata :media :normal_x264]
-        sert-nested-keywords [:metadata :srtUrls :en]
-        get-in-nested-keywords #(get-in %1 %2)]
+        sert-nested-keywords [:metadata :srtUrls :en]]
     (if is-lecture?
-      {:link (get-in-nested-keywords item video-nested-keywords)
-       :srt (get-in-nested-keywords item sert-nested-keywords)})))
+      {:link (get-in item video-nested-keywords)
+       :srt (get-in item sert-nested-keywords)})))
 
 (defn session->videos
   "Transform a session into videos, hits API"
